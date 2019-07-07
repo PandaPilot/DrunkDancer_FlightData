@@ -130,6 +130,7 @@ for bagFile in listOfBagFiles:
             #processed[i][10] =processed[i][10]-floatfloat(data[i][36])
             #processed[i][11] =processed[i][11]-floatfloat(data[i][37])
         processed=processed[~np.all(processed == 0, axis=1)]
+	print(np.shape(processed))
         filename_processed=folder + '/Processed.csv'
         np.savetxt(filename_processed, processed, delimiter=",")
 
