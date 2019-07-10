@@ -114,8 +114,8 @@ for bagFile in listOfBagFiles:
         print(np.shape(data))
 
         processed=np.zeros((len(data),17))
-        for i in range(1,len(data)):
-                       
+
+        for i in range(1,len(data)):                       
 
     #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
             processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
@@ -132,6 +132,6 @@ for bagFile in listOfBagFiles:
         processed=processed[~np.all(processed == 0, axis=1)]
 	print(np.shape(processed))
         filename_processed=folder + '/Processed.csv'
-        np.savetxt(filename_processed, processed, delimiter=",")
+        np.savetxt(filename_processed, processed, delimiter=",", header="time,R,P,T,Y,x,y,z,r,p,y,vx,vy,vz,wx,wy,wz")
 
 print "Done reading all " + numberOfFiles + " bag files."
