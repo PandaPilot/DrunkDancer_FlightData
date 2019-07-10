@@ -113,17 +113,18 @@ for bagFile in listOfBagFiles:
         #print(row[0])
         print(np.shape(data))
 
-        processed=np.zeros((len(data),17))
+        processed=np.zeros((len(data),18))
 
-        for i in range(1,len(data)):                       
+        for i in range(1,len(data)-1):                       
 
     #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
             processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
-            processed[i][1]=(float(data[i][16])-float(data[i][20]))/1000 # Roll pwm scaled
-            processed[i][2]=(float(data[i][17])-float(data[i][21]))/1000 # Pitch pwm scaled
-            processed[i][3]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
-            processed[i][4]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
-            for j in range(5,17):
+	    processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
+            processed[i][2]=(float(data[i][16])-float(data[i][20]))/1000 # Roll pwm scaled
+            processed[i][3]=(float(data[i][17])-float(data[i][21]))/1000 # Pitch pwm scaled
+            processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
+            processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
+            for j in range(6,18):
                 processed[i][j] =float(data[i][j+18]) # x y z roll pitch yaw vx vy vz wx wy wz
             # if normalise position
             #processed[i][9] =processed[i][9]-floatfloat(data[i][35])
@@ -132,6 +133,6 @@ for bagFile in listOfBagFiles:
         processed=processed[~np.all(processed == 0, axis=1)]
 	print(np.shape(processed))
         filename_processed=folder + '/Processed.csv'
-        np.savetxt(filename_processed, processed, delimiter=",", header="time,R,P,T,Y,x,y,z,r,p,y,vx,vy,vz,wx,wy,wz")
+        np.savetxt(filename_processed, processed, delimiter=",", header="time,dt,R,P,T,Y,x,y,z,r,p,y,vx,vy,vz,wx,wy,wz")
 
 print "Done reading all " + numberOfFiles + " bag files."
