@@ -119,7 +119,7 @@ for bagFile in listOfBagFiles:
 
     #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
             processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
-	    processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
+            processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
             processed[i][2]=(float(data[i][16])-float(data[i][20]))/1000 # Roll pwm scaled
             processed[i][3]=(float(data[i][17])-float(data[i][21]))/1000 # Pitch pwm scaled
             processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
@@ -131,7 +131,7 @@ for bagFile in listOfBagFiles:
             #processed[i][10] =processed[i][10]-floatfloat(data[i][36])
             #processed[i][11] =processed[i][11]-floatfloat(data[i][37])
         processed=processed[~np.all(processed == 0, axis=1)]
-	print(np.shape(processed))
+        print(np.shape(processed))
         filename_processed=folder + '/Processed.csv'
         np.savetxt(filename_processed, processed, delimiter=",", header="time,dt,R,P,T,Y,x,y,z,r,p,y,vx,vy,vz,wx,wy,wz")
 
