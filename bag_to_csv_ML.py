@@ -125,7 +125,7 @@ for bagFile in listOfBagFiles:
             processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
             processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
             for j in range(6,18):
-                processed[i][j] =float(data[i][j+18]) # x y z roll pitch yaw vx vy vz wx wy wz
+                processed[i][j] =float(data[i][j+17]) # x y z roll pitch yaw vx vy vz wx wy wz
             # if normalise position
             #processed[i][9] =processed[i][9]-floatfloat(data[i][35])
             #processed[i][10] =processed[i][10]-floatfloat(data[i][36])
