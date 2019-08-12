@@ -112,18 +112,23 @@ for bagFile in listOfBagFiles:
         # use string.join to put them together
         #print(row[0])
         print(np.shape(data))
-
+#        for i in range(1,len(data)-1):
+#            if data[i][7]=='"Position"' or data[i][7]=='"MPC"':
+#                processed=np.zeros((len(data)-i+1,18))
+#                break
         processed=np.zeros((len(data),18))
-
-        for i in range(1,len(data)-1):                       
+        for i in range(1,len(processed)-1):                       
 
     #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
             processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
             processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
-            processed[i][2]=(float(data[i][16])-float(data[i][20]))/1000 # Roll pwm scaled
-            processed[i][3]=(float(data[i][17])-float(data[i][21]))/1000 # Pitch pwm scaled
-            processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
-            processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
+            if data[i][7]=='"Disarmed"':
+                processed[i][2:5]=0
+            else:
+                processed[i][2]=(float(data[i][16])-1500)/1000 # Roll pwm scaled
+                processed[i][3]=(float(data[i][17])-1500)/1000 # Pitch pwm scaled
+                processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
+                processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
             for j in range(6,18):
                 processed[i][j] =float(data[i][j+17]) # x y z roll pitch yaw vx vy vz wx wy wz
             # if normalise position
