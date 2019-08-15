@@ -129,6 +129,9 @@ for bagFile in listOfBagFiles:
             processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
             for j in range(6,18):
                 processed[i][j] =float(data[i][j+17]) # x y z roll pitch yaw vx vy vz wx wy wz
+            if processed[i][6]<=0.0:
+                processed=np.delete(processed,list(range(i,len(processed))),0)
+                break
             # if normalise position
             #processed[i][9] =processed[i][9]-floatfloat(data[i][35])
             #processed[i][10] =processed[i][10]-floatfloat(data[i][36])
