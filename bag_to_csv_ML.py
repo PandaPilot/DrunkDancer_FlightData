@@ -18,6 +18,9 @@ import numpy as np
 import os #for file management make directory
 import shutil #for file management, copy file
 
+def column(matrix, i):
+    return [row[i] for row in matrix]
+
 #verify correct input arguments: 1 or 2
 if (len(sys.argv) > 2):
     print ("invalid number of arguments:   " + str(len(sys.argv)))
@@ -116,22 +119,38 @@ for bagFile in listOfBagFiles:
 #            if data[i][7]=='"Position"' or data[i][7]=='"MPC"':
 #                processed=np.zeros((len(data)-i+1,18))
 #                break
-        processed=np.zeros((len(data),18))
-        for i in range(1,len(processed)-1):                       
-
-    #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
-            processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
-            processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
-
-            processed[i][2]=(float(data[i][16])-1500)/1000 # Roll pwm scaled
-            processed[i][3]=(float(data[i][17])-1500)/1000 # Pitch pwm scaled
-            processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
-            processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
+        processed=np.zeros((len(data)-2,18))
+        time=np.float_(column(data,4)[1:len(data)])+np.float_(column(data,5)[1:len(data)])/10**9-(float(data[1][4])+float(data[1][5])/10**9) # message publish time        
+        processed[:,0]=time[0:len(processed)]  
+        processed[:,1]=time[1:(len(processed)+1)]-time[0:len(processed)]      
+        processed[:,2]=(np.float_(column(data,16)[1:(len(processed)+1)])-1500)/1000 # Roll pwm scaled
+        processed[:,3]=(np.float_(column(data,17)[1:(len(processed)+1)])-1500)/1000 # Pitch pwm scaled
+        processed[:,4]=(np.float_(column(data,18)[1:(len(processed)+1)])-1000)/1000 # Thrust pwm scaled
+        processed[:,5]=(np.float_(column(data,19)[1:(len(processed)+1)])-1500)/1000 # Yawrate pwm scaled
+        if (np.shape(data)[1]==56):
             for j in range(6,18):
-                processed[i][j] =float(data[i][j+17]) # x y z roll pitch yaw vx vy vz wx wy wz
-            if processed[i][6]<=0.0:
+                processed[:,j] = np.float_(column(data,j+17)[1:(len(processed)+1)]) # x y z roll pitch yaw vx vy vz wx wy wz
+        else:
+            for j in range(6,18):
+                processed[:,j] = np.float_(column(data,j+14)[1:(len(processed)+1)]) # x y z roll pitch yaw vx vy vz wx wy wz
+
+        for i in range(1,len(processed)-1):         
+#            print('in loop:'+str(i))
+#    #(float(data[i][0])-float(data[1][0]))/10**9 # rosbag time in row 1
+#            processed[i][0]=(float(data[i][4])+float(data[i][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9) # message publish time
+#            processed[i][1]=(float(data[i+1][4])+float(data[i+1][5])/10**9)-(float(data[1][4])+float(data[1][5])/10**9)-processed[i][0] # message publish time
+#
+#            processed[i][2]=(float(data[i][16])-1500)/1000 # Roll pwm scaled
+#            processed[i][3]=(float(data[i][17])-1500)/1000 # Pitch pwm scaled
+#            processed[i][4]=(float(data[i][18])-1000)/1000 # Thrust pwm scaled
+#            processed[i][5]=(float(data[i][19])-1500)/1000 # Yaw pwm scaled
+            
+            if processed[i][8]<=0.0:
+                print(processed[i][8])
                 processed=np.delete(processed,list(range(i,len(processed))),0)
+                print('break')
                 break
+        print('complete')
             # if normalise position
             #processed[i][9] =processed[i][9]-floatfloat(data[i][35])
             #processed[i][10] =processed[i][10]-floatfloat(data[i][36])
