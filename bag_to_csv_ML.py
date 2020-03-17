@@ -105,6 +105,7 @@ for bagFile in listOfBagFiles:
     # open file for processing and normalising
     # Data out (in order from left-right):
     # time roll(pwm) pitch(pwm) thrust(pwm) yawrate(pwm) x y z roll(rad) pitch(rad) yaw(rad)  vx vy vz wx wy wz
+
     dataname1=(folder + '/_slash_Flight_Data.csv')
     dataname2=(folder + '/Flight_Data.csv')
     if os.path.exists(dataname1) or os.path.exists(dataname2): # Check for both naming conventions
@@ -155,5 +156,6 @@ for bagFile in listOfBagFiles:
             print(np.shape(processed))
             filename_processed=folder + '/Processed.csv'
             np.savetxt(filename_processed, processed, delimiter=",", header="time,dt,R,P,T,Y,x,y,z,r,p,y,vx,vy,vz,wx,wy,wz")
+
 
 print ("Done reading all " + numberOfFiles + " bag files.")
