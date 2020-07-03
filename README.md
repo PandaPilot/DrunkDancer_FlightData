@@ -4,3 +4,5 @@
 2. run "  python bag_to_csv.py  "
 
 rosbag will be moved to new directory with raw data Flight_Data.csv and processed data Processed.csv
+
+3. running " python recover_bag.py " will delete 
